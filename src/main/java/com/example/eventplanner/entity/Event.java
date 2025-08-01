@@ -1,23 +1,24 @@
 package com.example.eventplanner.entity;
 
 import com.example.eventplanner.dto.EventRequestDto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity // Table과 매핑되는 클래스
+@Entity
 @Getter
 @NoArgsConstructor
 public class Event extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, length = 30)
     private String title;
+    @Column(nullable = false, length = 200)
     private String description;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String password;
 
     public Event(String title, String description, String name, String password) {
@@ -27,7 +28,7 @@ public class Event extends BaseEntity {
         this.password = password;
     }
 
-    public void updateFromDto(EventRequestDto requestDto) {
+    public void updateEventFromDto(EventRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.name = requestDto.getName();
     }
