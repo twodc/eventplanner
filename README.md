@@ -10,5 +10,5 @@ EventPlanner는 일정을 효율적으로 등록, 수정, 조회, 삭제할 수 
 - 일정 삭제(Delete) — 비밀번호 인증 기반
 
 ## API 명세서 & ERD
-- ![API 명세서](./src/images/API specification.png)
+- ![API 명세서](src/images/API_specification.png)
 - ![ERD](./src/images/ERD.png)
