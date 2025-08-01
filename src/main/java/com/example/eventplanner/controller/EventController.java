@@ -37,20 +37,20 @@ public class EventController {
 
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getEvent(@PathVariable Long id) {
+    @GetMapping("/{eventId}")
+    public ResponseEntity<?> getEvent(@PathVariable Long eventId) {
         try {
-            return new ResponseEntity<>(eventService.findEventById(id), HttpStatus.OK);
+            return new ResponseEntity<>(eventService.findEventById(eventId), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateEvent(@RequestBody EventRequestDto requestDto, @PathVariable Long id) {
+    @PutMapping("/{eventId}")
+    public ResponseEntity<?> updateEvent(@RequestBody EventRequestDto requestDto, @PathVariable Long eventId) {
         try {
-            eventService.modifyEvent(requestDto, id);
-            return new ResponseEntity<>(eventService.findEventById(id), HttpStatus.OK);
+            eventService.modifyEvent(requestDto, eventId);
+            return new ResponseEntity<>(eventService.findEventById(eventId), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {
@@ -58,10 +58,10 @@ public class EventController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEvent(@RequestBody EventRequestDto requestDto, @PathVariable Long id) {
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<?> deleteEvent(@RequestBody EventRequestDto requestDto, @PathVariable Long eventId) {
         try {
-            eventService.removeEvent(requestDto.getPassword(), id);
+            eventService.removeEvent(requestDto.getPassword(), eventId);
             return ResponseEntity.ok("삭제되었습니다.");
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

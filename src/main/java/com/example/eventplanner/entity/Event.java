@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class Event extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long eventId;
     @Column(nullable = false, length = 30)
     private String title;
     @Column(nullable = false, length = 200)

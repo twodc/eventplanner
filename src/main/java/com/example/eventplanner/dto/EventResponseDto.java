@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class EventResponseDto {
-    private Long id;
+    private Long eventId;
     private String title;
     private String description;
     private String name;
@@ -17,7 +17,7 @@ public class EventResponseDto {
     private LocalDateTime modifiedAt;
 
     public EventResponseDto(Event event) {
-        this.id = event.getId();
+        this.eventId = event.getEventId();
         this.title = event.getTitle();
         this.description = event.getDescription();
         this.name = event.getName();

@@ -26,7 +26,7 @@ public class EventService {
         Event savedEvent = eventRepository.save(event);
 
         return new EventResponseDto(
-                savedEvent.getId(), savedEvent.getTitle(), savedEvent.getDescription(),
+                savedEvent.getEventId(), savedEvent.getTitle(), savedEvent.getDescription(),
                 savedEvent.getName(), savedEvent.getCreatedAt(), savedEvent.getModifiedAt());
     }
 
@@ -45,19 +45,19 @@ public class EventService {
 
     // 선택 일정 조회
     @Transactional(readOnly = true)
-    public EventResponseDto findEventById(Long id) {
-        Event event = eventRepository.findById(id)
+    public EventResponseDto findEventById(Long eventId) {
+        Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("일정이 존재하지 않습니다."));
 
         return new EventResponseDto(
-                event.getId(), event.getTitle(), event.getDescription(),
+                event.getEventId(), event.getTitle(), event.getDescription(),
                 event.getName(), event.getCreatedAt(), event.getModifiedAt());
     }
 
     // 일정 수정
     @Transactional
-    public void modifyEvent(EventRequestDto requestDto, Long id) {
-        Event event = eventRepository.findById(id)
+    public void modifyEvent(EventRequestDto requestDto, Long eventId) {
+        Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("일정이 존재하지 않습니다."));
 
         if (event.getPassword().equals(requestDto.getPassword())) {
