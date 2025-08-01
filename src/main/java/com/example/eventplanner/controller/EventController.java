@@ -59,9 +59,9 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteEvent(@RequestParam String password, @PathVariable Long id) {
+    public ResponseEntity<?> deleteEvent(@RequestBody EventRequestDto requestDto, @PathVariable Long id) {
         try {
-            eventService.removeEvent(password, id);
+            eventService.removeEvent(requestDto.getPassword(), id);
             return ResponseEntity.ok("삭제되었습니다.");
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
