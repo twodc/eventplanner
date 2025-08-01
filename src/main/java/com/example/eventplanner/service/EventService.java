@@ -21,9 +21,9 @@ public class EventService {
     // 일정 생성
     @Transactional
     public EventResponseDto saveEvent(EventRequestDto requestDto) {
-        Event newEvent = new Event(
+        Event event = new Event(
                 requestDto.getTitle(), requestDto.getDescription(), requestDto.getName(), requestDto.getPassword());
-        Event savedEvent = eventRepository.save(newEvent);
+        Event savedEvent = eventRepository.save(event);
 
         return new EventResponseDto(
                 savedEvent.getId(), savedEvent.getTitle(), savedEvent.getDescription(),
@@ -61,9 +61,11 @@ public class EventService {
                 .orElseThrow(() -> new EntityNotFoundException("일정이 존재하지 않습니다."));
 
         if (event.getPassword().equals(requestDto.getPassword())) {
-            event.updateFromDto(requestDto);
+            event.updateEventFromDto(requestDto);
             eventRepository.save(event);
-        } // 비밀번호 오입력 시 어떻게 해야할지?
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
 
     }
 
@@ -72,9 +74,12 @@ public class EventService {
     public void removeEvent(String password, Long id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("일정이 존재하지 않습니다."));
+
         if (event.getPassword().equals(password)) {
             eventRepository.deleteById(id);
-        } // 현재 비밀번호를 오입력해도 200 OK가 뜬다. 삭제는 비밀번호가 맞아야 되긴하다.
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
 
     }
 

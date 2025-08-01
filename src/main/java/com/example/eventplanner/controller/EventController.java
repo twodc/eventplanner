@@ -1,14 +1,12 @@
 package com.example.eventplanner.controller;
 
 import com.example.eventplanner.dto.EventRequestDto;
-import com.example.eventplanner.dto.EventResponseDto;
 import com.example.eventplanner.service.EventService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,31 +16,58 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping
-    public ResponseEntity<EventResponseDto> createEvent(@RequestBody EventRequestDto requestDto) {
-        return new ResponseEntity<>(eventService.saveEvent(requestDto), HttpStatus.CREATED);
+    public ResponseEntity<?> createEvent(@RequestBody EventRequestDto requestDto) {
+        try {
+            return new ResponseEntity<>(eventService.saveEvent(requestDto), HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("필수 입력 항목이 누락되었습니다.");
+        }
+
     }
 
     @GetMapping
-    public ResponseEntity<List<EventResponseDto>> getEvents(
+    public ResponseEntity<?> getEvents(
             @RequestParam(required = false) String name
     ) {
-        return new ResponseEntity<>(eventService.findAllEvents(name), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(eventService.findAllEvents(name), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("등록된 일정이 없습니다.");
+        }
+
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EventResponseDto> getEvent(@PathVariable Long id) {
-        return new ResponseEntity<>(eventService.findEventById(id), HttpStatus.OK);
+    public ResponseEntity<?> getEvent(@PathVariable Long id) {
+        try {
+            return new ResponseEntity<>(eventService.findEventById(id), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public EventResponseDto updateEvent(@RequestBody EventRequestDto requestDto, @PathVariable Long id) {
-        eventService.modifyEvent(requestDto, id);
-        return eventService.findEventById(id);
+    public ResponseEntity<?> updateEvent(@RequestBody EventRequestDto requestDto, @PathVariable Long id) {
+        try {
+            eventService.modifyEvent(requestDto, id);
+            return new ResponseEntity<>(eventService.findEventById(id), HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteEvent(@RequestBody EventRequestDto requestDto, @PathVariable Long id) {
-        eventService.removeEvent(requestDto.getPassword(), id);
+    public ResponseEntity<?> deleteEvent(@RequestParam String password, @PathVariable Long id) {
+        try {
+            eventService.removeEvent(password, id);
+            return ResponseEntity.ok("삭제되었습니다.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
 }
