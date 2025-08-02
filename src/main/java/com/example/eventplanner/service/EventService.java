@@ -25,9 +25,7 @@ public class EventService {
                 requestDto.getTitle(), requestDto.getDescription(), requestDto.getName(), requestDto.getPassword());
         Event savedEvent = eventRepository.save(event);
 
-        return new EventResponseDto(
-                savedEvent.getEventId(), savedEvent.getTitle(), savedEvent.getDescription(),
-                savedEvent.getName(), savedEvent.getCreatedAt(), savedEvent.getModifiedAt());
+        return new EventResponseDto(savedEvent);
     }
 
     // 전체 일정 조회
@@ -49,9 +47,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("일정이 존재하지 않습니다."));
 
-        return new EventResponseDto(
-                event.getEventId(), event.getTitle(), event.getDescription(),
-                event.getName(), event.getCreatedAt(), event.getModifiedAt());
+        return new EventResponseDto(event);
     }
 
     // 일정 수정
