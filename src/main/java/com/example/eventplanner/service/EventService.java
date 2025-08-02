@@ -6,7 +6,6 @@ import com.example.eventplanner.entity.Event;
 import com.example.eventplanner.repository.EventRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,14 +30,15 @@ public class EventService {
     // 전체 일정 조회
     @Transactional(readOnly = true)
     public List<EventResponseDto> findAllEvents(String name) {
-        List<Event> events = eventRepository.findAll(Sort.by(Sort.Direction.DESC, "modifiedAt"));
+        List<Event> events = (name == null)
+                ? eventRepository.findAllByOrderByModifiedAtDesc()
+                : eventRepository.findByNameOrderByModifiedAtDesc(name);
 
-        if (name == null) {
-            return events.stream().map(EventResponseDto::new).toList();
-        } else {
-            return events.stream().filter(event -> event.getName().equals(name)).map(EventResponseDto::new).toList();
+        if (events.isEmpty()) {
+            throw new EntityNotFoundException("등록된 일정이 없습니다.");
         }
 
+        return events.stream().map(EventResponseDto::new).toList();
     }
 
     // 선택 일정 조회

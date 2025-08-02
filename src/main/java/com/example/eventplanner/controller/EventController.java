@@ -32,7 +32,7 @@ public class EventController {
         try {
             return new ResponseEntity<>(eventService.findAllEvents(name), HttpStatus.OK);
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("등록된 일정이 없습니다.");
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(e.getMessage());
         }
 
     }

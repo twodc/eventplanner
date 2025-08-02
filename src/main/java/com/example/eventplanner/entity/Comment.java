@@ -1,6 +1,6 @@
 package com.example.eventplanner.entity;
 
-import com.example.eventplanner.dto.CommentsRequestDto;
+import com.example.eventplanner.dto.CommentRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Comments extends BaseEntity {
+public class Comment extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentsId;
+    private Long commentId;
     @ManyToOne
     private Event event;
     @Column(nullable = false, length = 100)
@@ -21,14 +21,14 @@ public class Comments extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    public Comments(Event event, String description, String name, String password) {
+    public Comment(Event event, String description, String name, String password) {
         this.event = event;
         this.description = description;
         this.name = name;
         this.password = password;
     }
 
-    public void updateCommentFromDto(CommentsRequestDto requestDto) {
+    public void updateCommentFromDto(CommentRequestDto requestDto) {
         this.description = requestDto.getDescription();
     }
 
