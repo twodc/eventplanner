@@ -44,7 +44,7 @@ public class EventService {
     // 선택 일정 조회
     @Transactional(readOnly = true)
     public EventResponseDto findEventById(Long eventId) {
-        Event event = eventRepository.findById(eventId)
+        Event event = eventRepository.findByWithComments(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("일정이 존재하지 않습니다."));
 
         return new EventResponseDto(event);

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -15,6 +16,7 @@ public class EventResponseDto {
     private String name;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private List<CommentResponseDto> comments;
 
     public EventResponseDto(Event event) {
         this.eventId = event.getEventId();
@@ -23,6 +25,10 @@ public class EventResponseDto {
         this.name = event.getName();
         this.createdAt = event.getCreatedAt();
         this.modifiedAt = event.getModifiedAt();
+        this.comments = event.getComments()
+                .stream()
+                .map(CommentResponseDto::new)
+                .toList();
     }
 
 }
