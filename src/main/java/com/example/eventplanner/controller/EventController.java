@@ -3,6 +3,7 @@ package com.example.eventplanner.controller;
 import com.example.eventplanner.dto.EventRequestDto;
 import com.example.eventplanner.service.EventService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping
-    public ResponseEntity<?> createEvent(@RequestBody EventRequestDto requestDto) {
+    public ResponseEntity<?> createEvent(@Valid @RequestBody EventRequestDto requestDto) {
         try {
             return new ResponseEntity<>(eventService.saveEvent(requestDto), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -47,7 +48,7 @@ public class EventController {
     }
 
     @PutMapping("/{eventId}")
-    public ResponseEntity<?> updateEvent(@RequestBody EventRequestDto requestDto, @PathVariable Long eventId) {
+    public ResponseEntity<?> updateEvent(@Valid @RequestBody EventRequestDto requestDto, @PathVariable Long eventId) {
         try {
             eventService.modifyEvent(requestDto, eventId);
             return new ResponseEntity<>(eventService.findEventById(eventId), HttpStatus.OK);
@@ -59,7 +60,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{eventId}")
-    public ResponseEntity<?> deleteEvent(@RequestBody EventRequestDto requestDto, @PathVariable Long eventId) {
+    public ResponseEntity<?> deleteEvent(@Valid @RequestBody EventRequestDto requestDto, @PathVariable Long eventId) {
         try {
             eventService.removeEvent(requestDto.getPassword(), eventId);
             return ResponseEntity.ok("삭제되었습니다.");

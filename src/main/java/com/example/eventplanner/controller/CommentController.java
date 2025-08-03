@@ -3,6 +3,7 @@ package com.example.eventplanner.controller;
 import com.example.eventplanner.dto.CommentRequestDto;
 import com.example.eventplanner.service.CommentService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<?> createComments(@RequestBody CommentRequestDto requestDto, @PathVariable Long eventId) {
+    public ResponseEntity<?> createComments(@Valid @RequestBody CommentRequestDto requestDto, @PathVariable Long eventId) {
         try {
             return new ResponseEntity<>(commentService.saveComment(requestDto, eventId), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -46,7 +47,7 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<?> updateComment(@RequestBody CommentRequestDto requestDto,
+    public ResponseEntity<?> updateComment(@Valid @RequestBody CommentRequestDto requestDto,
                                             @PathVariable Long eventId, @PathVariable Long commentId) {
         try {
             commentService.modifyComment(requestDto, eventId, commentId);
@@ -59,7 +60,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<?> deleteComment(@RequestBody CommentRequestDto requestDto,
+    public ResponseEntity<?> deleteComment(@Valid @RequestBody CommentRequestDto requestDto,
                               @PathVariable Long eventId, @PathVariable Long commentId) {
         try {
             commentService.removeComment(requestDto.getPassword(), eventId, commentId);
