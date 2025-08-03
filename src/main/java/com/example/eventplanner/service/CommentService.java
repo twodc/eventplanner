@@ -23,13 +23,17 @@ public class CommentService {
     // 댓글 생성
     @Transactional
     public CommentResponseDto saveComment(CommentRequestDto requestDto, Long eventId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("일정이 존재하지 않습니다."));
-        Comment comment = new Comment(
-                event, requestDto.getDescription(), requestDto.getName(), requestDto.getPassword());
-        Comment savedComment = commentRepository.save(comment);
+        if (commentRepository.countByEvent_EventId(eventId) >= 10) {
+            throw new RuntimeException("해당 일정에 더 이상 댓글을 작성할 수 없습니다.");
+        } else {
+            Event event = eventRepository.findById(eventId)
+                    .orElseThrow(() -> new EntityNotFoundException("일정이 존재하지 않습니다."));
+            Comment comment = new Comment(
+                    event, requestDto.getDescription(), requestDto.getName(), requestDto.getPassword());
+            Comment savedComment = commentRepository.save(comment);
 
-        return new CommentResponseDto(savedComment);
+            return new CommentResponseDto(savedComment);
+        }
     }
 
     // 전체 댓글 조회
